@@ -41,6 +41,15 @@ public class Produtos {
     @Column(name="codigo_barras")
     private String codigoBarras;
 
+    @Column(name = "quantidade_estoque", nullable = false)
+    private Integer quantidadeEstoque = 0;
+
+    @Column(name = "estoque_minimo", nullable = false)
+    private Integer estoqueMinimo = 0;
+
+    @Column(name = "estoque_abaixo_minimo", nullable = false)
+    private Boolean estoqueAbaixoMinimo = false;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
