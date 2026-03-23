@@ -34,8 +34,8 @@ public class HistoricoPreco {
 
     @Id
     @UuidGenerator
-    @Column(name = "id", columnDefinition = "VARCHAR(36)")
-    private UUID id;
+    @Column(name = "id", length = 36, nullable = false)
+    private String id;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "produtos_id")
     private Produtos produtos;
