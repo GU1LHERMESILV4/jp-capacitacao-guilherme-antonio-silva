@@ -28,7 +28,6 @@ Este projeto é uma API REST de e‑commerce desenvolvida em Java com Spring Boo
 - [Modelagem de Domínio (Entidades Sugeridas)](#4-modelagem-de-domínio-entidades-sugeridas)
 - [Testes Unitários](#5-testes-unitários)
 - [Sugestões de Evolução — Regras de Negócio e Melhorias](#6-sugestões-de-evolução--regras-de-negócio-e-melhorias-para-os-alunos)
-- [Tarefas / Exercícios Práticos](#7-tarefas--exercícios-práticos)
 
 ---
 
