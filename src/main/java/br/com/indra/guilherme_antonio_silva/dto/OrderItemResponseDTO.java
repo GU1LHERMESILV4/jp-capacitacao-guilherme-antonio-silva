@@ -1,15 +1,17 @@
-package br.com.indra.guilherme_antonio_silva.service.dto;
+package br.com.indra.guilherme_antonio_silva.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class CartItemResponseDTO {
+public class OrderItemResponseDTO {
 
     private Long id;
     private Long produtoId;

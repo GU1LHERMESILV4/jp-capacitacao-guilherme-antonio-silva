@@ -1,4 +1,4 @@
-package br.com.indra.guilherme_antonio_silva.service.dto;
+package br.com.indra.guilherme_antonio_silva.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

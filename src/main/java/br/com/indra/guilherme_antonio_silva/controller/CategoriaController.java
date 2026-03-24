@@ -1,8 +1,8 @@
 package br.com.indra.guilherme_antonio_silva.controller;
 
 import br.com.indra.guilherme_antonio_silva.service.CategoriaService;
-import br.com.indra.guilherme_antonio_silva.service.dto.CategoriaRequestDTO;
-import br.com.indra.guilherme_antonio_silva.service.dto.CategoriaResponseDTO;
+import br.com.indra.guilherme_antonio_silva.dto.CategoriaRequestDTO;
+import br.com.indra.guilherme_antonio_silva.dto.CategoriaResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;

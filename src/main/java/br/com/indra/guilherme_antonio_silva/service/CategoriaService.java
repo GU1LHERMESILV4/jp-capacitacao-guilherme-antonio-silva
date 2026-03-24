@@ -2,8 +2,8 @@ package br.com.indra.guilherme_antonio_silva.service;
 
 import br.com.indra.guilherme_antonio_silva.model.Categoria;
 import br.com.indra.guilherme_antonio_silva.repository.CategoriaRepository;
-import br.com.indra.guilherme_antonio_silva.service.dto.CategoriaRequestDTO;
-import br.com.indra.guilherme_antonio_silva.service.dto.CategoriaResponseDTO;
+import br.com.indra.guilherme_antonio_silva.dto.CategoriaRequestDTO;
+import br.com.indra.guilherme_antonio_silva.dto.CategoriaResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

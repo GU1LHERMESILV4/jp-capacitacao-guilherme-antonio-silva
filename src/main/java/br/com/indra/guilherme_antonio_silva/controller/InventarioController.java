@@ -2,8 +2,8 @@ package br.com.indra.guilherme_antonio_silva.controller;
 
 import br.com.indra.guilherme_antonio_silva.model.InventarioTransacao;
 import br.com.indra.guilherme_antonio_silva.service.InventarioService;
-import br.com.indra.guilherme_antonio_silva.service.dto.InventarioAdjustmentRequestDTO;
-import br.com.indra.guilherme_antonio_silva.service.dto.InventarioStatusResponseDTO;
+import br.com.indra.guilherme_antonio_silva.dto.InventarioAdjustmentRequestDTO;
+import br.com.indra.guilherme_antonio_silva.dto.InventarioStatusResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;

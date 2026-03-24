@@ -1,4 +1,4 @@
-package br.com.indra.guilherme_antonio_silva.service.dto;
+package br.com.indra.guilherme_antonio_silva.dto;
 
 import br.com.indra.guilherme_antonio_silva.model.PromotionType;
 import lombok.Data;
