@@ -27,7 +27,7 @@ Este projeto é uma API REST de e‑commerce desenvolvida em Java com Spring Boo
   - [Relatórios e Métricas](#34-relatórios-e-métricas)
 - [Modelagem de Domínio (Entidades Sugeridas)](#4-modelagem-de-domínio-entidades-sugeridas)
 - [Testes Unitários](#5-testes-unitários)
-- [Sugestões de Evolução — Regras de Negócio e Melhorias](#6-sugestões-de-evolução--regras-de-negócio-e-melhorias-para-os-alunos)
+- [Sugestões de Evolução — Regras de Negócio e Melhorias](#6-sugestões-de-evolução--regras-de-negócio-e-melhorias)
 
 ---
 
@@ -378,71 +378,9 @@ No Windows PowerShell:
 
 ---
 
-## 6. Sugestões de Evolução — Regras de Negócio e Melhorias (para os alunos)
+## 6. Sugestões de Evolução — Regras de Negócio e Melhorias
 
-Este projeto foi criado como introdução ao Java e pode ser ampliado com novas regras de negócio, entidades, validações e funcionalidades. As sugestões abaixo servem como exercícios guiados para aprimorar:
+Futuras features implementáveis
 
-- API REST
-- Java
-- Spring Boot
-- Autenticação/autorização
-- Modelagem de dados
-- Boas práticas de testes
-
-As funcionalidades estão organizadas por prioridade e dificuldade.
-
-### 6.1. Funcionalidades Prioritárias
-
-1. **Categorias e Organização do Catálogo**  
-   _Prioridade: Alta • Dificuldade: Baixa_
-
-   - Criar entidade `Category`.
-   - Associar `Product` → `Category`.
-   - Implementar busca de produtos por nome/categoria.
-   - Validar dados básicos (nome obrigatório, proibir duplicidade).
-
-2. **Controle de Estoque (Inventário)**  
-   _Prioridade: Alta • Dificuldade: Média_
-
-   - Criar `InventoryTransaction`.
-   - Garantir consistência em entradas/saídas/ajustes/devoluções.
-   - Impedir vendas com estoque insuficiente.
-   - Criar alertas de estoque mínimo.
-
-3. **Carrinho de Compras**  
-   _Prioridade: Alta • Dificuldade: Média_
-
-   - Implementar carrinho com 1 ativo por usuário.
-   - Persistir `priceSnapshot` nos itens.
-   - Recalcular totais a cada atualização.
-
-4. **Pedidos (Orders)**  
-   _Prioridade: Alta • Dificuldade: Média_
-
-   - Completar o fluxo de status (`PAID`, `SHIPPED`, `DELIVERED`).
-   - Integrar notificações em todas as mudanças de status.
-   - Adicionar endpoints para pagar/enviar/entregar pedido.
-
-5. **Promoções e Cupons**  
-   _Prioridade: Média • Dificuldade: Média_
-
-   - Implementar diferentes tipos de desconto.
-   - Validar datas, limites de uso e elegibilidade.
-
-6. **Reviews e Avaliações**  
-   _Prioridade: Baixa • Dificuldade: Baixa_
-
-   - Restringir avaliações a quem comprou.
-   - Limitar a 1 review por produto/pedido.
-   - Calcular média de notas.
-
-7. **Auditoria (Audit Log)**  
-   _Prioridade: Média • Dificuldade: Baixa_
-
-   - Registrar ações de CRUD com payload antes/depois.
-   - Garantir imutabilidade da auditoria.
-
-8. **Relatórios e Métricas**  
-   _Prioridade: Baixa • Dificuldade: Média_
-
-   - Implementar relatórios agregados (vendas, top produtos, etc.).
+- Multi-seller (cada vendedor gerencia seus produtos).
+- Agendamento (Scheduler) para alertas de estoque baixo.
