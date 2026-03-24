@@ -1,6 +1,6 @@
 package br.com.indra.guilherme_antonio_silva.service;
 
-import br.com.indra.guilherme_antonio_silva.service.dto.OrderStatusChangeEventDTO;
+import br.com.indra.guilherme_antonio_silva.dto.OrderStatusChangeEventDTO;
 
 public interface OrderNotificationService {
 

@@ -1,8 +1,8 @@
 package br.com.indra.guilherme_antonio_silva.controller;
 
 import br.com.indra.guilherme_antonio_silva.service.ReviewService;
-import br.com.indra.guilherme_antonio_silva.service.dto.ReviewCreateRequestDTO;
-import br.com.indra.guilherme_antonio_silva.service.dto.ReviewResponseDTO;
+import br.com.indra.guilherme_antonio_silva.dto.ReviewCreateRequestDTO;
+import br.com.indra.guilherme_antonio_silva.dto.ReviewResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;

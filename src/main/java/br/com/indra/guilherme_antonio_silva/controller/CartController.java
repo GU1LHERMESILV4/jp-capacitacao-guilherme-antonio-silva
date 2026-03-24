@@ -1,8 +1,8 @@
 package br.com.indra.guilherme_antonio_silva.controller;
 
 import br.com.indra.guilherme_antonio_silva.service.CartService;
-import br.com.indra.guilherme_antonio_silva.service.dto.CartItemRequestDTO;
-import br.com.indra.guilherme_antonio_silva.service.dto.CartResponseDTO;
+import br.com.indra.guilherme_antonio_silva.dto.CartItemRequestDTO;
+import br.com.indra.guilherme_antonio_silva.dto.CartResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package br.com.indra.guilherme_antonio_silva.service.dto;
+package br.com.indra.guilherme_antonio_silva.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoriaRequestDTO {
+public class CategoriaResponseDTO {
 
+    private Long id;
     private String nome;
     private Long categoriaPaiId;
 }

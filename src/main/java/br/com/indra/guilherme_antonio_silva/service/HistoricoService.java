@@ -2,7 +2,7 @@ package br.com.indra.guilherme_antonio_silva.service;
 
 import br.com.indra.guilherme_antonio_silva.model.HistoricoPreco;
 import br.com.indra.guilherme_antonio_silva.repository.HistoricoPrecoRepository;
-import br.com.indra.guilherme_antonio_silva.service.dto.HistoricoProdutoDTO;
+import br.com.indra.guilherme_antonio_silva.dto.HistoricoProdutoDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
