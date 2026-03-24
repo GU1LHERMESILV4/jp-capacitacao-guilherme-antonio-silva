@@ -57,7 +57,7 @@ public class ReviewService {
                 .product(product)
                 .userId(userId)
                 .rating(dto.getRating())
-                .comment(dto.getComment())
+                .review_comment(dto.getComment())
                 .createdAt(OffsetDateTime.now())
                 .build();
 
@@ -79,7 +79,7 @@ public class ReviewService {
                 .productId(review.getProduct().getId())
                 .userId(review.getUserId())
                 .rating(review.getRating())
-                .comment(review.getComment())
+                .comment(review.getReview_comment())
                 .createdAt(review.getCreatedAt())
                 .build();
     }
