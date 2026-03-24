@@ -1,4 +1,4 @@
-# API de E‑commerce – Projeto de Capacitação Java / Spring Boot
+# API de E‑commerce – Projeto de Capacitação JP Minsait
 
 Este projeto é uma API REST de e‑commerce desenvolvida em Java com Spring Boot, criada como base para estudos de:
 
