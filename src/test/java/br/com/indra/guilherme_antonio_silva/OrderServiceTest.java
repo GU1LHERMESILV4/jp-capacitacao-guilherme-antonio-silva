@@ -4,6 +4,7 @@ import br.com.indra.guilherme_antonio_silva.model.*;
 import br.com.indra.guilherme_antonio_silva.repository.CartRepository;
 import br.com.indra.guilherme_antonio_silva.repository.OrderRepository;
 import br.com.indra.guilherme_antonio_silva.service.InventarioService;
+import br.com.indra.guilherme_antonio_silva.service.OrderNotificationService;
 import br.com.indra.guilherme_antonio_silva.service.OrderService;
 import br.com.indra.guilherme_antonio_silva.service.dto.OrderCreateRequestDTO;
 import br.com.indra.guilherme_antonio_silva.service.dto.OrderResponseDTO;
@@ -32,6 +33,9 @@ public class OrderServiceTest {
 
     @Mock
     private InventarioService inventarioService;
+
+    @Mock
+    private OrderNotificationService orderNotificationService;
 
     @InjectMocks
     private OrderService orderService;
@@ -87,6 +91,9 @@ public class OrderServiceTest {
 
         verify(inventarioService, times(1)).removerEstoque(eq(1L), any());
         assertFalse(cart.isAtivo());
+
+        // Deve notificar mudança de status (criação do pedido)
+        verify(orderNotificationService, times(1)).notifyStatusChange(any());
     }
 
     @Test
@@ -96,6 +103,9 @@ public class OrderServiceTest {
 
         assertThrows(EntityNotFoundException.class,
                 () -> orderService.createOrderFromCart(userId, new OrderCreateRequestDTO()));
+
+        // Não deve notificar quando criação falha
+        verifyNoInteractions(orderNotificationService);
     }
 
     @Test
@@ -114,6 +124,9 @@ public class OrderServiceTest {
 
         assertThrows(IllegalStateException.class,
                 () -> orderService.createOrderFromCart(userId, new OrderCreateRequestDTO()));
+
+        // Não deve notificar quando criação falha
+        verifyNoInteractions(orderNotificationService);
     }
 
     @Test
@@ -149,6 +162,9 @@ public class OrderServiceTest {
 
         assertEquals(OrderStatus.CANCELLED, response.getStatus());
         verify(inventarioService, times(1)).adicionarEstoque(eq(1L), any());
+
+        // Deve notificar mudança de status (cancelamento)
+        verify(orderNotificationService, times(1)).notifyStatusChange(any());
     }
 
     @Test
@@ -165,6 +181,9 @@ public class OrderServiceTest {
 
         assertThrows(IllegalStateException.class,
                 () -> orderService.cancelOrder(100L, userId));
+
+        // Não deve notificar quando cancelamento falha
+        verifyNoInteractions(orderNotificationService);
     }
 
     @Test

@@ -20,17 +20,20 @@ public class OrderService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final InventarioService inventarioService;
+    private final OrderNotificationService orderNotificationService;
 
     public OrderService(OrderRepository orderRepository,
                         OrderItemRepository orderItemRepository,
                         CartRepository cartRepository,
                         CartItemRepository cartItemRepository,
-                        InventarioService inventarioService) {
+                        InventarioService inventarioService,
+                        OrderNotificationService orderNotificationService) {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.inventarioService = inventarioService;
+        this.orderNotificationService = orderNotificationService;
     }
 
     @Transactional
@@ -80,6 +83,9 @@ public class OrderService {
         // Persistir pedido
         Order savedOrder = orderRepository.save(order);
 
+        // Notificar mudança de status (novo pedido criado)
+        notifyStatusChange(null, savedOrder);
+
         // Marcar carrinho como inativo
         cart.setAtivo(false);
         cartRepository.save(cart);
@@ -103,6 +109,7 @@ public class OrderService {
             throw new IllegalStateException("Cancelamento permitido apenas para pedidos nos status CREATED ou PAID");
         }
 
+        OrderStatus oldStatus = order.getStatus();
         order.setStatus(OrderStatus.CANCELLED);
         order.setCancelledAt(OffsetDateTime.now());
 
@@ -115,7 +122,38 @@ public class OrderService {
         });
 
         Order saved = orderRepository.save(order);
+
+        // Notificar mudança de status (pedido cancelado)
+        notifyStatusChange(oldStatus, saved);
+
         return toResponseDTO(saved);
+    }
+
+    private void notifyStatusChange(OrderStatus oldStatus, Order order) {
+        // Evitar notificação desnecessária quando status não muda
+        if (oldStatus != null && oldStatus == order.getStatus()) {
+            return;
+        }
+
+        OrderStatusChangeEventDTO event = OrderStatusChangeEventDTO.builder()
+                .orderId(order.getId())
+                .userId(order.getUserId())
+                .oldStatus(oldStatus)
+                .newStatus(order.getStatus())
+                .totalItens(order.getTotalItens())
+                .totalValor(order.getTotalValor())
+                .discount(order.getDiscount())
+                .freight(order.getFreight())
+                .total(order.getTotal())
+                .address(order.getAddress())
+                .createdAt(order.getCreatedAt())
+                .paidAt(order.getPaidAt())
+                .shippedAt(order.getShippedAt())
+                .deliveredAt(order.getDeliveredAt())
+                .cancelledAt(order.getCancelledAt())
+                .build();
+
+        orderNotificationService.notifyStatusChange(event);
     }
 
     private OrderResponseDTO toResponseDTO(Order order) {
