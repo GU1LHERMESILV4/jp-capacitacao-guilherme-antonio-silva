@@ -26,10 +26,10 @@ public class Review {
     private String userId;
 
     @Column(nullable = false)
-    private Integer rating; // 1..5
+    private Integer rating;
 
     @Column(length = 2000)
-    private String comment;
+    private String review_comment;
 
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
