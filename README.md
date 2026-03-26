@@ -1,89 +1,89 @@
 # API de E‑commerce – Projeto de Capacitação JP Minsait
 
-Este projeto é uma API REST de e‑commerce desenvolvida em Java com Spring Boot, criada como base para estudos de:
+API REST de e‑commerce desenvolvida em **Java 21** com **Spring Boot**, utilizando **Oracle Database** como banco de dados relacional.
+O projeto simula o fluxo completo de uma loja online (catálogo, estoque, carrinho, pedidos, promoções, reviews, auditoria e relatórios) com foco em **regras de negócio**, **boas práticas de API REST** e **testes automatizados**.
 
-- Java e Spring Boot
-- Modelagem de domínio (entidades e regras de negócio)
-- Boas práticas de API REST
-- Persistência com Spring Data JPA
-- Testes unitários
-- Integração com notificações (webhook) ao mudar status do pedido
+Este repositório foi baseado e evoluído a partir do projeto original:
 
-É um projeto **didático**, pensado para ser ampliado com novas regras de negócio, entidades, validações e funcionalidades.
-
-## Mini Glossário
-
-- [Tecnologias e Stack](#1-tecnologias-e-stack)
-- [Funcionalidades Implementadas](#2-funcionalidades-implementadas)
-  - [Categorias e Organização do Catálogo](#21-categorias-e-organização-do-catálogo)
-  - [Controle de Estoque (Inventário)](#22-controle-de-estoque-inventário)
-  - [Carrinho de Compras (Cart)](#23-carrinho-de-compras-cart)
-  - [Pedidos (Orders)](#24-pedidos-orders)
-  - [Notificações de Mudança de Status de Pedido (Webhook)](#25-notificações-de-mudança-de-status-de-pedido-webhook)
-- [Funcionalidades Futuras / Em Evolução](#3-funcionalidades-futuras--em-evolução)
-  - [Promoções e Cupons](#31-promoções-e-cupons)
-  - [Reviews e Avaliações](#32-reviews-e-avaliações)
-  - [Auditoria (Audit-log)](#33-auditoria-audit-log)
-  - [Relatórios e Métricas](#34-relatórios-e-métricas)
-- [Modelagem de Domínio (Entidades Sugeridas)](#4-modelagem-de-domínio-entidades-sugeridas)
-- [Testes Unitários](#5-testes-unitários)
-- [Sugestões de Evolução — Regras de Negócio e Melhorias](#6-sugestões-de-evolução--regras-de-negócio-e-melhorias)
+Projeto base: <https://github.com/Felipe-Abreu/jp-capacitacao-2026>
 
 ---
 
-## 1. Tecnologias e Stack
+## Objetivo do Projeto
+
+- Consolidar conhecimentos de **backend Java** em um contexto próximo ao corporativo.
+- Praticar **modelagem de domínio** (entidades, relacionamentos, regras).
+- Implementar **APIs REST** limpas, bem estruturadas e documentadas.
+- Exercitar **testes unitários** e boas práticas de manutenção de código.
+- Servir como **projeto de portfólio** para oportunidades como desenvolvedor back-end.
+
+---
+
+## Tecnologias e Stack
 
 - **Linguagem:** Java 21
-- **Framework:** Spring Boot
-- **Persistência:** Spring Data JPA
-- **Banco:** (configurável; em testes, H2 em memória)
+- **Framework:** Spring Boot 4.0.4
+- **Persistência:** Spring Data JPA (Hibernate)
+- **Banco de Dados:** Oracle Database
 - **Build:** Maven
-- **Testes:** JUnit 5, Mockito
-- **Logging:** SLF4J + Log4j2 (configuração específica para testes)
 - **Documentação de API:** Springdoc OpenAPI (Swagger UI)
+- **Testes:** JUnit 5, Mockito
+- **Logging:** SLF4J + Log4j2 (com `log4j2-test.xml` para testes)
 
 ---
 
-## 2. Funcionalidades Implementadas
+## Arquitetura
 
-### 2.1. Categorias e Organização do Catálogo
+O projeto segue uma arquitetura em camadas, organizada por pacote:
 
-- Todo produto pertence a uma categoria.
-- Categorias podem ter hierarquia (pai → filho).
-- Nome de categoria é único no mesmo nível.
+- **Controller** (`controller/`):  
+  Camada de entrada HTTP (REST). Expõe endpoints para catálogo, carrinho, pedidos, inventário, promoções, reviews, auditoria, relatórios etc.
 
-**Validações:**
+- **Service** (`service/`):  
+  Camada de **regras de negócio**, por exemplo:
+  - Controle de estoque / inventário
+  - Fluxo de checkout (carrinho → pedido)
+  - Cancelamento de pedidos
+  - Disparo de notificações de mudança de status do pedido
 
-- Nome obrigatório.
-- Proibição de duplicidade de nome na mesma hierarquia.
+- **Repository** (`repository/`):  
+  Acesso a dados com Spring Data JPA, persistindo no Oracle.
 
-**Endpoints sugeridos:**
+- **Model / Domain** (`model/`):  
+  Entidades do domínio de e‑commerce, como `Product`, `Category`, `Cart`, `CartItem`, `Order`, `OrderItem`, `InventoryTransaction`, `Promotion`, `Review`, `AuditLog` etc.
+
+- **DTOs** (`dto/`):  
+  Objetos de transferência usados pelos controllers e serviços, incluindo o evento de notificação de pedido (`OrderStatusChangeEventDTO`).
+
+---
+
+## Principais Funcionalidades
+
+Resumo das features de negócio já modeladas/implementadas (detalhes em `docs/features.md`):
+
+### 1. Categorias e Organização do Catálogo
+
+- Todo produto pertence a uma **categoria**.
+- Suporte a **hierarquia de categorias** (pai → filho).
+- Nome de categoria **único por nível**.
+
+Exemplos de endpoints:
 
 - `GET    /categories`
 - `POST   /categories`
 - `PUT    /categories/{id}`
 - `DELETE /categories/{id}`
 
-> Observação: a implementação completa pode variar, mas a modelagem e os endpoints seguem esse padrão.
-
 ---
 
-### 2.2. Controle de Estoque (Inventário)
+### 2. Controle de Estoque (Inventário)
 
 - Cada ajuste de estoque gera um registro de `InventoryTransaction`.
-- A criação de pedidos reduz o estoque dos produtos.
-- Cancelamento de pedido devolve o estoque dos itens.
-- Impede vendas com estoque insuficiente.
-- Pode sinalizar estoque mínimo (via flag/regra de negócio).
+- A criação de um **pedido** reduz o estoque.
+- O **cancelamento** de pedido devolve o estoque.
+- Bloqueio de vendas com **estoque insuficiente**.
 
-**Tipos de transação:**
-
-- Entrada (compra/fornecedor)
-- Saída (venda)
-- Ajuste
-- Devolução
-
-**Endpoints sugeridos:**
+Exemplos de endpoints:
 
 - `POST /inventory/{productId}/add`
 - `POST /inventory/{productId}/remove`
@@ -91,26 +91,26 @@ Este projeto é uma API REST de e‑commerce desenvolvida em Java com Spring Boo
 
 ---
 
-### 2.3. Carrinho de Compras (Cart)
+### 3. Carrinho de Compras (Cart)
 
-- Usuário autenticado possui **apenas 1 carrinho ativo**.
-- Itens do carrinho possuem `priceSnapshot` (preço no momento da adição).
-- Toda alteração no carrinho recalcula totais (`totalItens`, `totalValor`).
+- Usuário autenticado tem **apenas 1 carrinho ativo**.
+- Cada item guarda um `priceSnapshot` (preço no momento da adição).
+- Atualizações recalculam automaticamente os totais do carrinho.
 
-**Endpoints sugeridos:**
+Endpoints típicos:
 
-- `GET  /cart` — obtém o carrinho ativo do usuário
-- `POST /cart/items` — adiciona item
-- `PUT  /cart/items/{itemId}` — atualiza quantidade
-- `DELETE /cart/items/{itemId}` — remove item
+- `GET  /cart`
+- `POST /cart/items`
+- `PUT  /cart/items/{itemId}`
+- `DELETE /cart/items/{itemId}`
 
 ---
 
-### 2.4. Pedidos (Orders)
+### 4. Pedidos (Orders)
 
 Fluxo principal: **Carrinho → Pedido (checkout)**.
 
-#### Status do pedido
+Status principais do pedido:
 
 - `CREATED`
 - `PAID`
@@ -118,269 +118,198 @@ Fluxo principal: **Carrinho → Pedido (checkout)**.
 - `DELIVERED`
 - `CANCELLED`
 
-**Regras principais:**
+Regras chave:
 
-- Checkout:
-  - Cria um `Order` a partir do carrinho ativo.
-  - Copia os itens do carrinho para `OrderItem`.
-  - Abate o estoque de cada item via serviço de inventário.
-  - Desativa o carrinho após o checkout.
-- Cancelamento:
-  - Permitido apenas se o pedido estiver em `CREATED` ou `PAID`.
-  - Muda o status para `CANCELLED`.
-  - Devolve o estoque dos itens.
-- Consulta:
-  - `getOrder` consulta pedido pelo `id` e `userId` (evitando acesso de outros usuários).
+- **Checkout**:
+  - Cria `Order` a partir do carrinho ativo.
+  - Copia itens de `Cart` para `OrderItem`.
+  - Abate estoque via serviço de inventário.
+  - Desativa o carrinho após checkout.
+- **Cancelamento**:
+  - Permitido apenas em `CREATED` ou `PAID`.
+  - Devolve estoque ao inventário.
 
-**Endpoints sugeridos:**
+Endpoints típicos:
 
-- `POST /orders` — cria pedido a partir do carrinho (checkout)
-- `GET  /orders/{id}` — retorna o pedido do usuário
-- `POST /orders/{id}/cancel` — cancela o pedido (quando permitido)
+- `POST /orders`
+- `GET  /orders/{id}`
+- `POST /orders/{id}/cancel`
 
 ---
 
-### 2.5. Notificações de Mudança de Status de Pedido (Webhook)
+### 5. Promoções, Cupons, Reviews, Auditoria e Relatórios
 
-Foi implementada a feature de **Notificações via Webhook** sempre que o status de um pedido muda nos pontos principais:
+Além das funcionalidades principais acima, o domínio contempla (detalhado em `docs/features.md`):
 
-- Na criação do pedido (`CREATED`).
-- No cancelamento do pedido (`CANCELLED`).
+- **Promoções e Cupons**  
+  Descontos percentuais/fixos, validade, limite de uso, associação por produto/categoria.
 
-#### 2.5.1. Modelo de evento
+- **Reviews e Avaliações**  
+  Apenas quem comprou avalia, 1 review por produto por pedido, média de avaliação por produto.
 
-DTO `OrderStatusChangeEventDTO`, contendo:
+- **Auditoria (Audit Log)**  
+  Registro de quem alterou o quê e quando, com antes/depois (JSON).
 
-- Identificação:
-  - `orderId`
-  - `userId`
-- Status:
-  - `oldStatus`
-  - `newStatus`
-- Totais:
-  - `totalItens`
-  - `totalValor`
-  - `discount`
-  - `freight`
-  - `total`
-- Dados adicionais:
-  - `address`
-- Datas:
-  - `createdAt`
-  - `paidAt`
-  - `shippedAt`
-  - `deliveredAt`
-  - `cancelledAt`
+- **Relatórios e Métricas**  
+  Produtos mais vendidos, faturamento por período, estoque baixo, promoções mais usadas.
 
-#### 2.5.2. Serviço de notificação
+---
 
-Interface:
+## Banco de Dados (Oracle)
 
-```java
-public interface OrderNotificationService {
-    void notifyStatusChange(OrderStatusChangeEventDTO event);
-}
-```
+O projeto utiliza **Oracle Database** como banco principal, alinhado com cenários corporativos.
 
-Implementação atual: `WebhookOrderNotificationService`:
+- Mapeamento objeto‑relacional com **JPA/Hibernate**.
+- Entidades de domínio de e‑commerce (Product, Category, Cart, Order, InventoryTransaction, Promotion, Review, AuditLog…).
+- Preparado para evolução via scripts SQL versionados (ex.: Flyway/Liquibase em futuras extensões).
 
-- Envia um **POST HTTP** com JSON do evento para uma URL configurável.
-- Usa `RestTemplate` + SLF4J.
-- Tratamento de erro: **best-effort** (registra log, mas não impede a mudança de status).
+A modelagem detalhada do banco (tabelas, colunas, relacionamentos) foi documentada em: `docs/schema-oracle.sql`.
 
-**Configuração da URL do webhook:**
+---
+
+## Configuração e Execução
+
+### 1. Pré‑requisitos
+
+- Java 21 instalado e configurado (`JAVA_HOME`).
+- Maven (ou uso do wrapper `mvnw` / `mvnw.cmd`).
+- Instância de **Oracle Database** acessível (local ou remota).
+- Usuário/schema no Oracle com permissões de criação de tabelas.
+
+### 2. Configurar `application.properties`
+
+Arquivo: `src/main/resources/application.properties`
+
+Exemplo de configuração (ajuste para o seu ambiente Oracle):
 
 ```properties
-notification.order.webhook.url=http://localhost:8081/order-status-webhook
+spring.application.name=jp-capacitacao-guilherme-antonio-silva
+
+# Oracle
+spring.datasource.url=jdbc:oracle:thin:@localhost:1521:XE
+spring.datasource.username=SEU_USUARIO
+spring.datasource.password=SUA_SENHA
+spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+
+# JPA / Hibernate
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.database-platform=org.hibernate.dialect.OracleDialect
+spring.jpa.show-sql=false
+spring.jpa.properties.hibernate.format_sql=true
+
+server.port=8080
 ```
 
-- Se não configurada ou vazia, nenhuma notificação é enviada.
+### 3. Build e execução
 
-#### 2.5.3. Integração com `OrderService`
-
-- Após salvar um pedido criado:
-  - Dispara evento de status com `oldStatus = null`, `newStatus = CREATED`.
-- Após salvar um pedido cancelado:
-  - Dispara evento de status com `oldStatus = CREATED|PAID`, `newStatus = CANCELLED`.
-- Há uma verificação para **não notificar** quando o status não muda de fato.
-
----
-
-## 3. Funcionalidades Futuras / Em Evolução
-
-### 3.1. Promoções e Cupons
-
-- Tipos:
-  - Desconto percentual (%)
-  - Desconto fixo (R$)
-  - Promoção por categoria ou produto
-  - Cupom com período de validade
-  - Cupom com limite de uso
-
-**Regras de validação:**
-
-- Cupom expirado → rejeitar.
-- Cupom já utilizado pelo usuário → rejeitar.
-- Cupom sem relação com os produtos do carrinho → rejeitar.
-
-**Endpoints sugeridos:**
-
-- `POST /promotions`
-- `POST /coupons/apply`
-
----
-
-### 3.2. Reviews e Avaliações
-
-- Apenas quem comprou pode avaliar.
-- Limite de 1 avaliação por produto por pedido.
-- Recalcular média de avaliações a cada novo review.
-
-**Endpoints sugeridos:**
-
-- `POST /reviews`
-- `GET  /reviews/product/{productId}`
-
----
-
-### 3.3. Auditoria (Audit Log)
-
-- Registrar:
-  - Quem criou/alterou/deletou.
-  - Data e hora.
-  - Antes e depois da alteração (JSON).
-- Logs de auditoria devem ser imutáveis.
-
-**Endpoint sugerido:**
-
-- `GET /audit?entity=Product`
-
----
-
-### 3.4. Relatórios e Métricas
-
-Exemplos de relatórios:
-
-- Produtos mais vendidos.
-- Faturamento por período.
-- Produtos com estoque baixo.
-- Promoções mais utilizadas.
-
-**Endpoints sugeridos:**
-
-- `GET /reports/sales`
-- `GET /reports/top-products`
-- `GET /reports/low-stock`
-
----
-
-## 4. Modelagem de Domínio (Entidades Sugeridas)
-
-Abaixo uma visão geral das entidades principais usadas/planejadas:
-
-- **Product**
-  - `id`, `name`, `description`, `sku`, `price`, `costPrice`, `categoryId`, `stockQuantity`, `active`, `createdAt`, `updatedAt`
-
-- **Category**
-  - `id`, `name`, `parentId`, `createdAt`, `updatedAt`
-
-- **InventoryTransaction**
-  - `id`, `productId`, `delta`, `reason`, `referenceId`, `createdBy`, `createdAt`
-
-- **Cart**
-  - `id`, `userId`, `status`, `ativo`, `totalItens`, `totalValor`, etc.
-
-- **CartItem**
-  - `id`, `cartId`, `productId`, `quantity`, `priceSnapshot`, `totalLinha`
-
-- **Order**
-  - `id`, `userId`, `total`, `discount`, `freight`, `status`, `createdAt`, `paidAt`, `shippedAt`, `deliveredAt`, `cancelledAt`, `address`, `cartId`, etc.
-
-- **OrderItem**
-  - `id`, `orderId`, `productId`, `quantity`, `priceSnapshot`, `totalLinha`
-
-- **Promotion**
-  - `id`, `code`, `type`, `value`, `validFrom`, `validTo`, `usageLimit`, `usedCount`, `applicableTo`
-
-- **Review**
-  - `id`, `productId`, `userId`, `rating`, `comment`, `createdAt`
-
-- **AuditLog**
-  - `id`, `entityType`, `entityId`, `action`, `beforeJson`, `afterJson`, `who`, `when`
-
----
-
-## 5. Testes Unitários
-
-### 5.1. Estratégia
-
-- Uso de **JUnit 5** e **Mockito**.
-- Os testes validam principalmente:
-  - Regras de negócio nas services (`CartService`, `InventarioService`, `OrderService`, etc.).
-  - Interações com repositórios e serviços auxiliares.
-
-### 5.2. Foco em `OrderServiceTest`
-
-O arquivo `OrderServiceTest` cobre cenários importantes para pedidos:
-
-- **Criação de pedido a partir do carrinho:**
-  - Verifica:
-    - `status = CREATED`
-    - Totais corretos (`totalItens`, `totalValor`)
-    - Itens copiados do carrinho
-    - Baixa de estoque (`inventarioService.removerEstoque`)
-    - Carrinho desativado (`cart.setAtivo(false)`)
-    - **Chamada do serviço de notificação** (`orderNotificationService.notifyStatusChange`)
-
-- **Criação de pedido com carrinho inexistente:**
-  - Lança `EntityNotFoundException`.
-  - Garante que **não há notificação enviada** (`verifyNoInteractions(orderNotificationService)`).
-
-- **Criação de pedido com carrinho vazio:**
-  - Lança `IllegalStateException`.
-  - Garante que **não há notificação enviada**.
-
-- **Cancelamento de pedido em status permitido (`CREATED`/`PAID`):**
-  - Muda status para `CANCELLED`.
-  - Devolve estoque (`inventarioService.adicionarEstoque`).
-  - Dispara **notificação de mudança de status**.
-
-- **Cancelamento de pedido em status não permitido (`SHIPPED`):**
-  - Lança `IllegalStateException`.
-  - Garante que nenhuma notificação é disparada.
-
-- **Consulta de pedido (`getOrder`)**
-  - Retorna corretamente o pedido associado ao `userId`.
-
-### 5.3. Logging em Testes (Log4j2)
-
-- Arquivo `log4j2-test.xml` em `src/test/resources`.
-- Define:
-  - Appender de console com pattern amigável.
-  - `Root` logger em nível `INFO`.
-  - Logger específico para `WebhookOrderNotificationService` em `DEBUG`, facilitando inspeção de logs de notificação durante os testes.
-
-### 5.4. Rodando os testes
-
-No diretório raiz do projeto:
+Na raiz do projeto:
 
 ```bash
-./mvnw test
+mvn clean install
+mvn spring-boot:run
 ```
 
 No Windows PowerShell:
 
 ```powershell
-.\mvnw test
+mvn clean install
+mvn spring-boot:run
 ```
 
-> Caso haja problemas com encoding em `application.properties`, ajuste para UTF-8 ou refine a configuração do plugin de resources no `pom.xml`.
+A aplicação ficará disponível em:
+
+```text
+http://localhost:8080
+```
 
 ---
 
-## 6. Sugestões de Evolução — Regras de Negócio e Melhorias
+## Documentação da API (Swagger / OpenAPI)
 
-Futuras features implementáveis
+A documentação interativa da API é gerada com **Springdoc OpenAPI**.
 
-- Multi-seller (cada vendedor gerencia seus produtos).
-- Agendamento (Scheduler) para alertas de estoque baixo.
+Após subir a aplicação, acesse:
+
+```text
+http://localhost:8080/swagger-ui.html
+```
+
+ou
+
+```text
+http://localhost:8080/swagger-ui/index.html
+```
+
+Você poderá:
+
+- Visualizar todos os endpoints disponíveis.
+- Conferir modelos de requisição/resposta.
+- Executar chamadas diretamente pelo navegador.
+
+---
+
+## Notificações de Mudança de Status de Pedido (Webhook)
+
+Sempre que o status de um pedido muda em pontos chave (ex.: criação e cancelamento), o sistema pode disparar uma notificação via **webhook**.
+
+### Configuração
+
+```properties
+# URL do webhook de notificação de pedido (deixe em branco para desabilitar)
+notification.order.webhook.url=http://localhost:8081/order-status-webhook
+```
+
+- Se a propriedade estiver vazia/ausente, a notificação é simplesmente ignorada (best‑effort).
+- Implementação padrão utiliza `RestTemplate` + SLF4J (Log4j2) para logs.
+
+### Evento de Notificação
+
+O payload enviado usa um DTO similar a `OrderStatusChangeEventDTO`, contendo:
+
+- Identificação: `orderId`, `userId`
+- Status: `oldStatus`, `newStatus`
+- Totais: `totalItens`, `totalValor`, `discount`, `freight`, `total`
+- Dados adicionais: `address`
+- Datas: `createdAt`, `paidAt`, `shippedAt`, `deliveredAt`, `cancelledAt`
+
+---
+
+## Testes Automatizados
+
+O projeto utiliza **JUnit 5** e **Mockito** para testes unitários, com foco nas regras de negócio das services.
+
+- Testes em `src/test/java/...` (ex.: `CartServiceTest`, `InventarioServiceTest`, `OrderServiceTest`).
+- Configuração de logs de teste em `src/test/resources/log4j2-test.xml`.
+
+Para executar os testes:
+
+```bash
+mvn test
+```
+
+No Windows PowerShell:
+
+```powershell
+mvn test
+```
+
+Os testes cobrem cenários como:
+
+- Criação de pedido a partir do carrinho (status, totais, itens, baixa de estoque, desativação do carrinho).
+- Cancelamento de pedido em status permitido (devolução de estoque, mudança de status).
+- Erros de negócio (carrinho inexistente/vazio, cancelamento em status inválido) sem disparar notificações indevidas.
+- Interações corretas com serviços auxiliares e repositórios.
+
+---
+
+## Melhorias Futuras
+
+Algumas funcionalidades e melhorias planejadas/sugeridas:
+
+-  **Scheduler** para alertas de estoque baixo.
+-  **Multi‑seller** (múltiplos vendedores gerenciando seus produtos).
+-  Autenticação/autorização (ex.: Spring Security + JWT).
+-  Métricas e monitoramento (Spring Boot Actuator, Prometheus, etc.).
+-  Integração com meios de pagamento externos.
+-  Scripts de migração de banco (Flyway/Liquibase) versionados.
+
