@@ -137,7 +137,7 @@ Endpoints típicos:
 
 ### 5. Promoções, Cupons, Reviews, Auditoria e Relatórios
 
-Além das funcionalidades principais acima, o domínio contempla (detalhado em `docs/features.md`):
+Além das funcionalidades principais acima, o domínio contempla:
 
 - **Promoções e Cupons**  
   Descontos percentuais/fixos, validade, limite de uso, associação por produto/categoria.
