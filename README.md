@@ -59,8 +59,6 @@ O projeto segue uma arquitetura em camadas, organizada por pacote:
 
 ## Principais Funcionalidades
 
-Resumo das features de negócio já modeladas/implementadas (detalhes em `docs/features.md`):
-
 ### 1. Categorias e Organização do Catálogo
 
 - Todo produto pertence a uma **categoria**.
